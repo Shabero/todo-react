@@ -25,22 +25,23 @@ const App = () => {
                 .then(({data}) => setTodos([...todos, data]))
     }
 
-    // const handleDelete  = (todo) => {
-    //     axios.delete(`${url}/ ${todo.id}` )
-    // }
+    const handleDeleteTodo  = (id) => {
+        axios.delete(`${url}/ ${id}` )
+            .then(() => setTodos(todos.filter(todo => todo.id !== id)))
+    }
 
     return (
-        <div className={'container'}>
-          <h1 className={'title'}>Todo list</h1>
+        <div className={'container '}>
+          <h1 className={'title'}>TODO LIST</h1>
             <input type="text" onChange={(e) => setTodoTitle(e.target.value)} value={todoTitle}/>
-            <button onClick={handleAddTodo}>Add todo</button>
+            <button onClick={handleAddTodo} className={'btn btn-primary '}>Add todo</button>
             {
                 todos.map(todo =>
                 <div key={todo.id} className={'todo-wrapper'}>
                     <p>{todo.title}</p>
                     <input type="checkbox" checked={todo.completed}/>
                     <span>{dayjs(todo.createdAt).format(' HH.mm DD.MM.YYYY')}</span>
-                    {/*<button onClick={() => handleDelete(todo)}>Delete Todo</button>*/}
+                    <button  onClick={() => handleDeleteTodo(todo.id)} className={'btn btn-danger'}>Delete Todo</button>
                 </div>
                 )
             }
