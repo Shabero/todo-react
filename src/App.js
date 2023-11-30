@@ -25,25 +25,39 @@ const App = () => {
                 .then(({data}) => setTodos([...todos, data]))
     }
 
-    const handleDeleteTodo  = (id) => {
-        axios.delete(`${url}/ ${id}` )
+    const handleDeleteTodo = (id) => {
+        axios.delete(`${url}/${id}`)
             .then(() => setTodos(todos.filter(todo => todo.id !== id)))
     }
+
+    const handleToggleComplete = (id, completed) => {
+        const updatedTodos = todos.map(todo =>
+            todo.id === id ? { ...todo, completed: !completed, completedAt: !completed ? new Date().toISOString() : null } : todo
+        );
+
+        axios.put(`${url}/${id}`, { completed: !completed, completedAt: !completed ? new Date().toISOString() : null })
+            .then(() => setTodos(updatedTodos));
+    };
+
 
     return (
         <div className={'container '}>
           <h1 className={'title'}>TODO LIST</h1>
-            <input type="text" onChange={(e) => setTodoTitle(e.target.value)} value={todoTitle}/>
-            <button onClick={handleAddTodo} className={'btn btn-primary '}>Add todo</button>
+            <input type="text" className={'border border-3 rounded-2 p-1 '} onChange={(e) => setTodoTitle(e.target.value)} value={todoTitle}/>
+            <button onClick={handleAddTodo} className={'btn btn-primary '} >ADD</button>
             {
-                todos.map(todo =>
-                <div key={todo.id} className={'todo-wrapper'}>
-                    <p>{todo.title}</p>
-                    <input type="checkbox" checked={todo.completed}/>
-                    <span>{dayjs(todo.createdAt).format(' HH.mm DD.MM.YYYY')}</span>
-                    <button  onClick={() => handleDeleteTodo(todo.id)} className={'btn btn-danger'}>Delete Todo</button>
-                </div>
-                )
+                todos.map(todo => (
+                    <div key={todo.id} className={'todo-wrapper d-flex justify-content-around'}>
+                        <p>{todo.title}</p>
+                        <input
+                            type="checkbox"
+                            checked={todo.completed}
+                            onChange={() => handleToggleComplete(todo.id, todo.completed)}
+                        />
+                        <span>{todo.completed ? dayjs(todo.completedAt).format(' HH.mm DD.MM.YYYY') : ''}</span>
+                        <button onClick={() => handleDeleteTodo(todo.id)} className={'btn btn-danger'}>Delete Todo</button>
+                    </div>
+                ))
             }
         </div>
     );

@@ -30,12 +30,9 @@ code {
 }
 
 .todo-wrapper{
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 5px 0;
   gap: 10px;
-  border-bottom: 1px solid red;
+  border-bottom: 2px solid #ada3a3;
 }
 
 .title{
